@@ -1,1 +1,225 @@
+Comparación de Resultados del Método 1 (Fornell y Larcker) en R y Jamovi
+
+Resultados del Método 1 en R
+Cálculo de la AVE y Raíz Cuadrada de la AVE
+
+En R, calculamos la AVE y la raíz cuadrada de la AVE para cada variable. Los resultados fueron los siguientes:
+
+Variable	Raíz Cuadrada de AVE
+age	0.4846
+weight_kg	0.7747
+height_cm	0.6765
+bmd	0.8232
+
+Matriz de Correlaciones
+age	weight_kg	height_cm	bmd
+age	0.4846	-0.0931	-0.2153	-0.3066
+weight_kg	-0.0931	0.7747	0.3678	0.5560
+height_cm	-0.2153	0.3678	0.6765	0.3244
+bmd	-0.3066	0.5560	0.3244	0.8232
+
+Resultados del Método 1 en Jamovi
+Cálculo de la AVE y Raíz Cuadrada de la AVE
+En Jamovi, la AVE no se calcula directamente, pero puedes obtener las cargas factoriales de un Análisis Factorial Exploratorio (EFA) y luego calcular la AVE manualmente. 
+Las cargas factoriales y la unicidad proporcionadas fueron las siguientes:
+
+Variable	Factor 1	Factor 2	Factor 3	Unicidad
+age	0.869	0.654	0.587	0.587
+weight_kg	0.869	0.278	0.278	0.278
+height_cm	0.319	-0.331	0.696	0.696
+bmd	0.642	0.364	0.364	0.364
+
+Matriz de Correlaciones
+age	weight_kg	height_cm	bmd
+age	-	-0.093	-0.215**	-0.307***
+weight_kg	-0.093	-	0.368***	0.556***
+height_cm	-0.215**	0.368***	-	0.324***
+bmd	-0.307***	0.556***	0.324***	-
+
+Comparación de Resultados
+
+Raíz Cuadrada de la AVE:
+
+En R, la raíz cuadrada de la AVE se calculó directamente: age (0.4846), weight_kg (0.7747), height_cm (0.6765), bmd (0.8232).
+En Jamovi, la AVE no se calcula directamente. Las cargas factoriales obtenidas del EFA pueden usarse para calcular la AVE manualmente.
+
+Correlaciones y Significancia:
+Los valores de correlación son similares entre los resultados obtenidos en R y Jamovi:
+
+age y weight_kg: R (-0.0931), Jamovi (-0.093)
+age y height_cm: R (-0.2153), Jamovi (-0.215)
+age y bmd: R (-0.3066), Jamovi (-0.307)
+weight_kg y height_cm: R (0.3678), Jamovi (0.368)
+weight_kg y bmd: R (0.5560), Jamovi (0.556)
+height_cm y bmd: R (0.3244), Jamovi (0.324)
+
+Intervalos de Confianza en Jamovi:
+Jamovi proporciona intervalos de confianza para las correlaciones:
+
+age y weight_kg: [-0.241, 0.059]
+age y height_cm: [-0.355, -0.066]
+age y bmd: [-0.437, -0.163]
+weight_kg y height_cm: [0.230, 0.491]
+weight_kg y bmd: [0.442, 0.652]
+height_cm y bmd: [0.182, 0.453]
+
+Los resultados obtenidos en Jamovi son consistentes con los obtenidos en R. Ambos métodos muestran que las correlaciones entre las variables son menores que la raíz cuadrada de la AVE, sugiriendo validez discriminante. Además, 
+los intervalos de confianza en Jamovi no incluyen el valor 1, lo que respalda aún más la validez discriminante. La interpretación general es que los constructos son distintos y medidos adecuadamente.
+
+
+
+
+
+
+
+
+
+Intervalo de Confianza de las Correlaciones (Anderson y Gerbing)
+
+Resultados del Método en R
+Correlación	Estimación IC 95% Inferior	IC 95% Superior
+
+age y weight_kg	-0.0931	-0.2441	0.0579
+age y height_cm	-0.2153	-0.3638	-0.0672
+age y bmd	-0.3066	-0.4509	-0.1622
+weight_kg y height_cm	0.3678	0.2268	0.5089
+weight_kg y bmd	0.5560	0.4299	0.6820
+height_cm y bmd	0.3244	0.1809	0.4679
+
+Resultados del Método en Jamovi
+Intervalos de Confianza para las Correlaciones
+Correlación	Estimación	IC 95% Inferior	IC 95% Superior
+
+age y weight_kg	-0.093	-0.241	0.059
+age y height_cm	-0.215	-0.355	-0.066
+age y bmd	-0.307	-0.437	-0.163
+weight_kg y height_cm	0.368	0.230	0.491
+weight_kg y bmd	0.556	0.442	0.652
+height_cm y bmd	0.324	0.182	0.453
+
+Comparación:
+
+Correlación age y weight_kg
+R: [-0.2441, 0.0579]
+Jamovi: [-0.241, 0.059]
+
+Correlación age y height_cm
+R: [-0.3638, -0.0672]
+Jamovi: [-0.355, -0.066]
+
+Correlación age y bmd
+R: [-0.4509, -0.1622]
+Jamovi: [-0.437, -0.163]
+
+Correlación weight_kg y height_cm
+R: [0.2268, 0.5089]
+Jamovi: [0.230, 0.491]
+
+Correlación weight_kg y bmd
+R: [0.4299, 0.6820]
+Jamovi: [0.442, 0.652]
+
+Correlación height_cm y bmd
+R: [0.1809, 0.4679]
+Jamovi: [0.182, 0.453]
+
+Los intervalos de confianza para las correlaciones obtenidos en R y Jamovi son muy similares. Las diferencias son mínimas y no afectan la interpretación de los resultados.
+En ambos casos, ningún intervalo de confianza incluye el valor 1, lo que indica validez discriminante. Esto significa que los constructos medidos son suficientemente distintos entre sí.
+
+Evaluación de la Validez Discriminante:
+R: Los intervalos de confianza no incluyen el valor 1, sugiriendo validez discriminante.
+Jamovi: Los intervalos de confianza no incluyen el valor 1, sugiriendo validez discriminante.
+Ambos métodos coinciden en su conclusión de que hay evidencia de validez discriminante, lo que confirma que los constructos medidos son distintos entre sí.
+
+
+
+
+
+Comparando dos Modelos CFA Anidados para cada Par de Factores (Beltran-Martin)
+
+Resultados del Método en R
+Modelo No Restringido (fit1)
+Chi-cuadrado (χ²): 0.0215
+Grados de libertad (df): 1
+p-valor: 0.884
+AIC: 3589.0
+BIC: 3617.2
+
+Modelo Restringido (fit2)
+Chi-cuadrado (χ²): 93.4384
+Grados de libertad (df): 2
+p-valor: < 2.2e-16
+AIC: 3680.4
+BIC: 3705.5
+Diferencia de Chi-cuadrado (Δχ²)
+Δχ²: 93.417
+Grados de libertad (Δdf): 1
+p-valor: < 2.2e-16
+
+
+Resultados del Método en Jamovi
+Modelo No Restringido
+Model tests (Pruebas del modelo)
+
+User Model (Modelo del usuario):
+Chi-cuadrado (χ²) =0.0215
+df = 1
+p = 0.884
+
+Baseline Model (Modelo base):
+χ²=113.7057
+df = 6
+p < 0.001
+
+Fit Indices (Índices de ajuste)
+SRMR: 0.002
+RMSEA: 0.000
+Intervalo de confianza del 95%: [0.000, 0.100]
+p = 0.906
+CFI: 1.000
+TLI: 1.055
+NNFI: 1.055
+RNI: 1.009
+NFI: 1.009
+RFI: 0.999
+IFI: 1.000
+PNFI: 0.167
+
+Comparación:
+Resultados de R:
+
+Modelo No Restringido: Chi-cuadrado (χ²) = 0.0215, df = 1, p = 0.884, AIC = 3589.0, BIC = 3617.2.
+Modelo Restringido: Chi-cuadrado (χ²) = 93.4384, df = 2, p < 2.2e-16, AIC = 3680.4, BIC = 3705.5.
+Diferencia de Chi-cuadrado: Δχ² = 93.417, Δdf = 1, p < 2.2e-16.
+
+Resultados de Jamovi:
+
+Modelo No Restringido: Chi-cuadrado (χ²) = 0.0215, df = 1, p = 0.884, RMSEA = 0.000 (IC 95%: [0.000, 0.100]), SRMR = 0.002, CFI = 1.000, TLI = 1.055.
+Modelo Restringido: No se ajustó correctamente en Jamovi.
+
+Consistencia entre Resultados de R y Jamovi:
+
+Los resultados del modelo no restringido en Jamovi son consistentes con los obtenidos en R. Ambos indican un excelente ajuste del modelo con un chi-cuadrado muy bajo y no significativo.
+El RMSEA, SRMR, y CFI en Jamovi también indican un buen ajuste del modelo no restringido.
+
+Problema con el Modelo Restringido en Jamovi:
+
+El modelo restringido no se ajustó correctamente en Jamovi, lo que sugiere que las restricciones impuestas no son adecuadas para los datos. 
+Esto podría deberse a que los factores no son verdaderamente independientes, lo cual también apoya la validez discriminante.
+
+Evaluación de la Validez Discriminante R:
+La diferencia significativa en el chi-cuadrado entre el modelo no restringido y el modelo restringido (Δχ² = 93.417, p < 2.2e-16) sugiere que permitir la correlación entre los 
+factores mejora significativamente el ajuste del modelo, lo que proporciona evidencia de validez discriminante.
+
+Jamovi:
+Los resultados del modelo no restringido indican un buen ajuste, y el fallo del modelo restringido sugiere que los factores están correlacionados, lo que también apoya la validez discriminante.
+
+
+
+
+
+
+
+
+
 
