@@ -4,7 +4,7 @@ head(datos_bmd)
 summary(datos_bmd)
 
 #Conteo de NA en cada columna
-na_count <- sapply(datos_bmd, function(x) sum(is.na(x)))
+na_count <- sapply(datos_bmd, function(x) sum(is.na(x))) 
 print(na_count)
 
 "Los datos proporcionados son de un estudio de pacientes relacionado con la densidad mineral ósea (BMD). Aquí hay una breve descripción de cada variable y su resumen estadístico:
