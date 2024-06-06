@@ -1,1 +1,170 @@
+#Cargando los datos
+datos_bmd <- read.csv("bmd.csv", header = TRUE, sep = ",")
+head(datos_bmd)
+summary(datos_bmd)
 
+#Conteo de NA en cada columna
+na_count <- sapply(datos_bmd, function(x) sum(is.na(x)))
+print(na_count)
+
+"Los datos proporcionados son de un estudio de pacientes relacionado con la densidad mineral ósea (BMD). Aquí hay una breve descripción de cada variable y su resumen estadístico:
+
+age: La edad media es de 63.63 años, con un primer cuartil de 54.42 y un tercer cuartil de 72.08.
+sex: Variable de tipo carácter (no se proporciona resumen estadístico detallado aquí).
+fracture: Variable de tipo carácter (no se proporciona resumen estadístico detallado aquí).
+weight_kg: Rango de peso de 36.00 kg a 96.00 kg. El peso medio es de 64.67 kg, con un primer cuartil de 56.00 kg y un tercer cuartil de 73.00 kg.
+height_cm: Rango de altura de 142.0 cm a 177.0 cm. La altura media es de 160.3 cm, con un primer cuartil de 154.0 cm y un tercer cuartil de 166.0 cm.
+medication: Variable de tipo carácter (no se proporciona resumen estadístico detallado aquí).
+waiting_time: Rango de tiempo de espera de 5 a 96 días. El tiempo medio de espera es de 19.74 días, con un primer cuartil de 9.00 días y un tercer cuartil de 24.00 días.
+bmd: Rango de valores de 0.4076 a 1.3624. La BMD media es de 0.7831, con un primer cuartil de 0.6708 y un tercer cuartil de 0.8888."
+
+
+
+#Las variables seleccionadas para el análisis en este estudio sobre la salud ósea son de gran importancia debido a sus roles críticos en la evaluación de la densidad mineral ósea (BMD) y su influencia en la salud ósea general. La edad es un factor esencial ya que la densidad ósea tiende a disminuir con el envejecimiento, especialmente en mujeres postmenopáusicas, haciendo que la edad sea clave para comprender los riesgos de osteoporosis y otras condiciones óseas. Evaluar la correlación entre la edad y la BMD puede ayudar a identificar los periodos de mayor riesgo de pérdida ósea. El peso corporal también es fundamental, ya que generalmente, un mayor peso se asocia con una mayor BMD debido a la carga adicional sobre el esqueleto; analizar esta relación puede ofrecer estrategias para prevenir la osteoporosis mediante el mantenimiento de un peso saludable. La altura, aunque no afecta directamente la BMD, puede influir en el riesgo de fracturas debido a la estructura corporal y la biomecánica, por lo que es relevante examinar su relación con la BMD. Finalmente, la BMD es la variable de resultado principal en estudios de salud ósea, ya que es un indicador clave de la fortaleza ósea y un predictor de riesgo de fracturas. Evaluar cómo variables como la edad, el peso y la altura están asociadas con la BMD es crucial para diagnosticar y prevenir condiciones óseas, así como para entender mejor la salud esquelética en la población general.
+
+
+#Test de la Varianza Extraida frente a Correlaciones (Fornell y Larcker)
+
+#Calculando la matriz de correlaciones
+cor_mat <- cor(datos_bmd[, c("age", "weight_kg", "height_cm", "bmd")], use = "complete.obs")
+
+#Calculando la varianza extraída promedio (AVE)
+calc_ave <- function(cor_mat) {
+  loadings <- principal(cor_mat)$loadings
+  ave <- rowSums(loadings^2) / ncol(loadings)
+  return(ave)
+}
+
+ave_values <- calc_ave(cor_mat)
+
+#Calculando la raíz cuadrada de AVE
+sqrt_ave <- sqrt(ave_values)
+
+#Crear una matriz para comparar la raíz cuadrada de AVE con las correlaciones
+comparison_matrix <- matrix(nrow = length(sqrt_ave), ncol = length(sqrt_ave))
+colnames(comparison_matrix) <- rownames(cor_mat)
+rownames(comparison_matrix) <- rownames(cor_mat)
+
+for (i in 1:length(sqrt_ave)) {
+  for (j in 1:length(sqrt_ave)) {
+    if (i == j) {
+      comparison_matrix[i, j] <- sqrt_ave[i]  #Mostrar raíz cuadrada de AVE en la diagonal
+    } else {
+      comparison_matrix[i, j] <- cor_mat[i, j]  #Mostrar correlaciones en las otras celdas
+    }
+  }
+}
+
+print(comparison_matrix)
+
+#Evaluación de la Validez Discriminante:
+
+#Para cada variable, la raíz cuadrada de la AVE es mayor que las correlaciones con otras variables, lo cual es un indicador de validez discriminante:
+
+"Para age (0.4846): Mayor que las correlaciones (-0.0931, -0.2153, -0.3066).
+Para weight_kg (0.7747): Mayor que las correlaciones (0.3678, 0.5560).
+Para height_cm (0.6765): Mayor que las correlaciones (0.3678, 0.3244).
+Para bmd (0.8232): Mayor que las correlaciones (0.5560, 0.3244)."
+
+#Se demuestra validez discriminante, ya que la raíz cuadrada de la AVE para cada variable es mayor que las correlaciones entre las variables, cumpliendo con el criterio de Fornell y Larcker.
+
+
+
+#Intervalo de Confianza de las Correlaciones (Anderson y Gerbing)
+
+# Calculando el intervalo de confianza para las correlaciones
+calc_ci <- function(cor_mat) {
+  n <- nrow(datos_bmd)
+  se <- sqrt((1 - cor_mat^2) / (n - 2))
+  ci_lower <- cor_mat - qnorm(0.975) * se
+  ci_upper <- cor_mat + qnorm(0.975) * se
+  return(list(lower = ci_lower, upper = ci_upper))
+}
+
+ci_correlations <- calc_ci(cor_mat)
+print(ci_correlations)
+
+#Evaluación de la Validez Discriminante: verificamos si los intervalos de confianza para las correlaciones entre los constructos incluyen el valor 1. Si algún intervalo de confianza incluye el valor 1, sugiere una falta de validez discriminante, ya que indica que los constructos pueden no ser distinguibles entre sí.
+
+#Correlaciones Evaluadas:
+
+"age y weight_kg:
+Límite inferior: -0.2441
+Límite superior: 0.0579
+No incluye el valor 1: Validez discriminante."
+
+"age y height_cm:
+Límite inferior: -0.3638
+Límite superior: -0.0672
+No incluye el valor 1: Validez discriminante."
+
+"age y bmd:
+Límite inferior: -0.4509
+Límite superior: -0.1622
+No incluye el valor 1: Validez discriminante."
+
+"weight_kg y height_cm:
+Límite inferior: 0.2268
+Límite superior: 0.5089
+No incluye el valor 1: Validez discriminante."
+
+"weight_kg y bmd:
+Límite inferior: 0.4299
+Límite superior: 0.6820
+No incluye el valor 1: Validez discriminante."
+
+"height_cm y bmd:
+Límite inferior: 0.1809
+Límite superior: 0.4679
+No incluye el valor 1: Validez discriminante."
+
+#Los intervalos de confianza para todas las correlaciones entre las variables no incluyen el valor 1, lo que indica que hay evidencia de validez discriminante para estas variables según el criterio de Anderson y Gerbing. Cada constructo es suficientemente distinto de los otros, cumpliendo con los requisitos de validez discriminante.
+
+
+
+
+
+#Comparando dos Modelos CFA Anidados para cada Par de Factores (Beltran-Martin)
+
+library(lavaan)  # Para CFA
+
+# Modelo no restringido
+model1 <- ' 
+  # definición de factores
+  F1 =~ age + weight_kg
+  F2 =~ height_cm + bmd
+'
+
+fit1 <- cfa(model1, data = datos_bmd)
+
+# Modelo restringido
+model2 <- '
+  F1 =~ age + weight_kg
+  F2 =~ height_cm + bmd
+  F1 ~~ 0*F2
+'
+
+fit2 <- cfa(model2, data = datos_bmd)
+
+# Comparación de modelos
+anova(fit1, fit2)
+
+
+#Criterios de Información (AIC y BIC):
+
+#AIC: El criterio de información de Akaike es menor para el modelo no restringido (fit1) (3589.0) en comparación con el modelo restringido (fit2) (3680.4), lo que sugiere que fit1 tiene un mejor ajuste.
+#BIC: El criterio de información bayesiano es también menor para el modelo no restringido (fit1) (3617.2) en comparación con el modelo restringido (fit2) (3705.5), lo que refuerza que fit1 tiene un mejor ajuste.
+
+#Chi-cuadrado (Chisq) y diferencia de Chi-cuadrado (Chisq diff):
+#fit1 Chisq: 0.0215
+#fit2 Chisq: 93.4384
+
+#Diferencia de Chi-cuadrado (Chisq diff): 93.417 (significativo a p < 2.2e-16
+
+#RMSEA:
+#El RMSEA (Root Mean Square Error of Approximation) es 0.739 para el modelo restringido (fit2), lo cual es considerablemente alto y sugiere un mal ajuste del modelo restringido.
+
+#Pr(>Chisq):
+#El valor p para la diferencia de chi-cuadrado es extremadamente significativo (< 2.2e-16), indicando que hay una diferencia estadísticamente significativa entre los dos modelos.
+
+#La prueba de diferencia de chi-cuadrado indica que el modelo no restringido fit1 ajusta significativamente mejor que el modelo restringido fit2. Esto sugiere que permitir la correlación entre los factores F1 y F2 mejora el ajuste del modelo, lo que proporciona evidencia de validez discriminante. En otras palabras, los factores F1 y F2 son distintivos y no deben ser considerados independientes.
